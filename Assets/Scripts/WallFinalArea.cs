@@ -7,7 +7,7 @@ public class WallFinalArea : MonoBehaviour
     public GameObject obj;
     void Update()
     {
-        if(CollectSystem.theScore == 1)
+        if(CollectSystem.theScore == 10)
         {
             Destroy(gameObject);
         }
