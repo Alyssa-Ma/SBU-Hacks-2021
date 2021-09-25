@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 1642833236}
   - component: {fileID: 1642833235}
   - component: {fileID: 1642833234}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -399,6 +399,10 @@ PrefabInstance:
     - target: {fileID: 2036905851532959348, guid: 4d60d697af4fd2949a6774e8f20ba7ec, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2372169612306033033, guid: 4d60d697af4fd2949a6774e8f20ba7ec, type: 3}
+      propertyPath: jumpForce
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9079766364163157548, guid: 4d60d697af4fd2949a6774e8f20ba7ec, type: 3}
       propertyPath: characterTransform

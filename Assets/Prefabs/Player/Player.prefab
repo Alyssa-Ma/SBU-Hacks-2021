@@ -95,6 +95,8 @@ GameObject:
   - component: {fileID: 2036905851532959344}
   - component: {fileID: 2036905851532959347}
   - component: {fileID: 9079766364163157548}
+  - component: {fileID: 2372169612306033033}
+  - component: {fileID: 1229069283167538328}
   - component: {fileID: 2036905851532959346}
   - component: {fileID: 2036905851532959349}
   m_Layer: 0
@@ -133,8 +135,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWalking: 0
-  isJump: 0
-  isGround: 0
+  isJumping: 0
+  isGrounded: 0
 --- !u!114 &2036905851532959347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +163,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 2003594312433553727}
+--- !u!114 &2372169612306033033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036905851532959348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e899048f440de0b4e88dc9f6e0f5d169, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 2
+--- !u!114 &1229069283167538328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036905851532959348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25d117681ca4dbe41818b35969c3757e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderRadius: 0.025
+  offsetRight: {x: 0.145, y: 0.015, z: 0}
 --- !u!54 &2036905851532959346
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -175,7 +204,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &2036905851532959349
 BoxCollider:

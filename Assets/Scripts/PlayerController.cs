@@ -6,10 +6,11 @@ public class PlayerController : MonoBehaviour
 {
     private IVelocity playerVelocity;
     private IRotation playerRotation;
-    
+    private IJump playerJump;
     private Animator playerAnimator;
+    private GroundCheck ground;
     [SerializeField]
-    private bool isWalking, isJump, isGround; 
+    private bool isWalking, isJumping = false, isGrounded; 
     private string currentState;
     private Vector3 velocity;
     
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
         playerVelocity = GetComponent<IVelocity>();
         playerAnimator = GetComponentInChildren<Animator>();
         playerRotation = GetComponent<IRotation>();
+        playerJump = GetComponent<IJump>();
+        ground = GetComponent<GroundCheck>();
     }
     void Update() // Update is called once per frame
     {
@@ -31,14 +34,20 @@ public class PlayerController : MonoBehaviour
             isWalking = false;
         }
         if (Input.GetKey(KeyCode.Space)) {
-            isJump = true;
+            isJumping = true;
         }
     }
     void FixedUpdate() // physics & colliders
     { 
-        if (isWalking) {
-            playerVelocity.SetVelocity(velocity.normalized);
-            playerRotation.SetRotation(velocity.normalized);
+        isGrounded = ground.GetIsGround();
+        if (isJumping && isGrounded) {
+            playerJump.Jump();
+            isJumping = false;
+        }
+        playerVelocity.SetVelocity(velocity.normalized);
+        playerRotation.SetRotation(velocity.normalized);
+        
+        if (isWalking && isGrounded) {
             ChangeAnimationState("WALK");
         }
         if (!isWalking) {
