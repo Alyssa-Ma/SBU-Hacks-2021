@@ -5,9 +5,11 @@ using UnityEngine;
 public class PlayerRotation : MonoBehaviour, IRotation
 {
     public Transform characterTransform;
-    public void SetRotation(Vector3 velocity) {
-        if (velocity.x != 0 || velocity.z != 0) {
-            characterTransform.rotation = Quaternion.LookRotation(velocity, Vector3.up);
-        }
+    public Transform cameraTransform;
+    public float smoothVelocity = 0.1f;
+    public float turnsmoothVelocity;
+    public void SetRotation(float targetAngle) {
+        float angle = Mathf.SmoothDampAngle(characterTransform.eulerAngles.y, targetAngle, ref turnsmoothVelocity, smoothVelocity);
+        characterTransform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 }

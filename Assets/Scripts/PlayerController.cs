@@ -9,11 +9,15 @@ public class PlayerController : MonoBehaviour
     private IJump playerJump;
     private Animator playerAnimator;
     private GroundCheck ground;
+    private Transform characterTransform;
+    [SerializeField]
+    private Transform cameraTransform;
     [SerializeField]
     private float projectileSpeed = 50f;
     [SerializeField]
     private bool isWalking, isJumping = false, isGrounded, isAttackPressed, isShooting = false; 
     private string currentState;
+    private float targetAngle;
     private Vector3 velocity;
     [SerializeField]
     public int maxHealth = 100;
@@ -31,16 +35,20 @@ public class PlayerController : MonoBehaviour
         playerRotation = GetComponent<IRotation>();
         playerJump = GetComponent<IJump>();
         ground = GetComponent<GroundCheck>();
+        characterTransform = transform.GetChild(0);
+        cameraTransform = transform.GetChild(1);
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
     }
     void Update() // Update is called once per frame
     {
         velocity = Vector3.zero;
-        velocity.x = Input.GetAxis("Horizontal");
-        velocity.z = Input.GetAxis("Vertical");
+        velocity.x = Input.GetAxisRaw("Horizontal");
+        velocity.z = Input.GetAxisRaw("Vertical");
+        targetAngle = Mathf.Atan2(velocity.x, velocity.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
         if (velocity != Vector3.zero) {
             isWalking = true;
+            velocity = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
         } 
         else {
             isWalking = false;
@@ -60,7 +68,7 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
         }
         playerVelocity.SetVelocity(velocity.normalized);
-        playerRotation.SetRotation(velocity.normalized);
+        playerRotation.SetRotation(targetAngle);
         
         if (!isAttackPressed) {
             if (isWalking && isGrounded) {
@@ -81,6 +89,12 @@ public class PlayerController : MonoBehaviour
             Invoke("shootingComplete", attackDelay);
             bulletCount = 0;
         }
+    }
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        healthBar.SetHealth(currentHealth);
     }
     void shootingComplete(){
         isShooting = false;
@@ -109,12 +123,5 @@ public class PlayerController : MonoBehaviour
             bulletCount += 1;
         }
         
-    }
-
-    void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-
-        healthBar.SetHealth(currentHealth);
     }
 }
