@@ -10,11 +10,18 @@ public class PlayerController : MonoBehaviour
     private Animator playerAnimator;
     private GroundCheck ground;
     [SerializeField]
-    private bool isWalking, isJumping = false, isGrounded, isShooting = false; 
+    private float projectileSpeed = 50f;
+    [SerializeField]
+    private bool isWalking, isJumping = false, isGrounded, isAttackPressed, isShooting = false; 
     private string currentState;
     private Vector3 velocity;
     [SerializeField]
     private int HP = 20;
+    private int bulletCount = 0;
+
+    public GameObject projectile;
+    public Transform firingPoint;
+    public Transform target;
     void Start()
     {
         playerVelocity = GetComponent<IVelocity>();
@@ -38,7 +45,7 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
         }
         if (Input.GetKey(KeyCode.Mouse0)) {
-            isShooting = true;
+            isAttackPressed = true;
         }
     }
     void FixedUpdate() // physics & colliders
@@ -51,7 +58,7 @@ public class PlayerController : MonoBehaviour
         playerVelocity.SetVelocity(velocity.normalized);
         playerRotation.SetRotation(velocity.normalized);
         
-        if (!isShooting) {
+        if (!isAttackPressed) {
             if (isWalking && isGrounded) {
                 ChangeAnimationState("WALK");
             }
@@ -59,12 +66,21 @@ public class PlayerController : MonoBehaviour
                 ChangeAnimationState("IDLE");
             }
         }
-        if (isShooting) {
-            ChangeAnimationState("SHOOT");
-            isShooting = false;
+        if (isAttackPressed) {
+            isAttackPressed = false;
+            if (!isShooting) {
+                ShootProjectile();
+                isShooting = true;
+                ChangeAnimationState("SHOOT");            
+            }
+            float attackDelay = playerAnimator.GetCurrentAnimatorStateInfo(0).length;
+            Invoke("shootingComplete", attackDelay);
+            bulletCount = 0;
         }
     }
-
+    void shootingComplete(){
+        isShooting = false;
+    }
     public void ChangeAnimationState(string newState) {
         if (currentState == newState ) return;
         playerAnimator.Play(newState);
@@ -78,5 +94,16 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Dead");
             }
         }
+    }
+
+    void ShootProjectile() {
+        if (bulletCount < 1)
+        {
+            var bullet = Instantiate(projectile, firingPoint.position, transform.GetChild(0).rotation) as GameObject; 
+            bullet.GetComponent<Rigidbody>().velocity = transform.GetChild(0).forward * projectileSpeed;
+            Debug.Log(transform.GetChild(0).forward);
+            bulletCount += 1;
+        }
+        
     }
 }
