@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IRotation 
 {
-    void SetRotation(Vector3 velocity);
+    void SetRotation(float angle);
 }
