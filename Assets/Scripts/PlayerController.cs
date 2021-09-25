@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     private bool isWalking, isJumping = false, isGrounded; 
     private string currentState;
     private Vector3 velocity;
-    
+    [SerializeField]
+    private int HP = 20;
     void Start()
     {
         playerVelocity = GetComponent<IVelocity>();
@@ -59,5 +60,11 @@ public class PlayerController : MonoBehaviour
         if (currentState == newState ) return;
         playerAnimator.Play(newState);
         currentState = newState;
+    }
+
+    private void OnCollisionEnter(Collision other) {
+        if (other.gameObject.CompareTag("Enemy")) {
+            HP -= 1;
+        }
     }
 }
