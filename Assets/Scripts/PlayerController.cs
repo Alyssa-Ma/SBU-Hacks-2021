@@ -16,7 +16,9 @@ public class PlayerController : MonoBehaviour
     private string currentState;
     private Vector3 velocity;
     [SerializeField]
-    private int HP = 20;
+    public int maxHealth = 100;
+    public int currentHealth;
+    public HealthBarScript healthBar;
     private int bulletCount = 0;
 
     public GameObject projectile;
@@ -29,6 +31,8 @@ public class PlayerController : MonoBehaviour
         playerRotation = GetComponent<IRotation>();
         playerJump = GetComponent<IJump>();
         ground = GetComponent<GroundCheck>();
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
     void Update() // Update is called once per frame
     {
@@ -89,8 +93,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Enemy")) {
-            HP -= 1;
-            if (HP <= 0) {
+            TakeDamage(5);
+            if (currentHealth <= 0) {
                 Debug.Log("Dead");
             }
         }
@@ -105,5 +109,12 @@ public class PlayerController : MonoBehaviour
             bulletCount += 1;
         }
         
+    }
+
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        healthBar.SetHealth(currentHealth);
     }
 }
