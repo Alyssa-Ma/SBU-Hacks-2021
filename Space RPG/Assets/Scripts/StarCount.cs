@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class StarCount : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   void OnTriggerEnter(Collider other)
+   {
+       CollectSystem.theScore += 1;
+       Destroy(gameObject);
+   }
 }
