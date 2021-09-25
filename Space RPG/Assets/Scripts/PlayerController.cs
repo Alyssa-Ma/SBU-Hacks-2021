@@ -4,23 +4,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public bool isWalk;
-    public bool isJump;
-    public bool isGround; 
+    private IVelocity playerVelocity;
+    [SerializeField]
+    private bool isWalking, isJump, isGround; 
+    private Vector3 velocity;
     void Start()
     {
-        
+        playerVelocity = GetComponent<IVelocity>();
     }
     void Update() // Update is called once per frame
     {
-        Vector3 velocity = Vector3.zero;
+        velocity = Vector3.zero;
         velocity.x = Input.GetAxis("Horizontal");
         velocity.z = Input.GetAxis("Vertical");
         if (velocity != Vector3.zero) {
-            isWalk = true;
+            isWalking = true;
         } 
         else {
-            isWalk = false;
+            isWalking = false;
         }
         if (Input.GetKey(KeyCode.Space)) {
             isJump = true;
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     }
     void FixedUpdate() // physics & colliders
     { 
-
+        if (isWalking) {
+            playerVelocity.SetVelocity(velocity);
+        }
     }
 }
