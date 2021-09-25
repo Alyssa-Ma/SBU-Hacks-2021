@@ -45,6 +45,9 @@ public class EnemyController : MonoBehaviour
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("bullet")) {
             HP -= 1;
+            if (HP <= 0) {
+                Destroy(gameObject);
+            }
         }
     }
 }

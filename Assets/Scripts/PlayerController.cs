@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Animator playerAnimator;
     private GroundCheck ground;
     [SerializeField]
-    private bool isWalking, isJumping = false, isGrounded; 
+    private bool isWalking, isJumping = false, isGrounded, isShooting = false; 
     private string currentState;
     private Vector3 velocity;
     [SerializeField]
@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.Space)) {
             isJumping = true;
         }
+        if (Input.GetKey(KeyCode.Mouse0)) {
+            isShooting = true;
+        }
     }
     void FixedUpdate() // physics & colliders
     { 
@@ -48,11 +51,17 @@ public class PlayerController : MonoBehaviour
         playerVelocity.SetVelocity(velocity.normalized);
         playerRotation.SetRotation(velocity.normalized);
         
-        if (isWalking && isGrounded) {
-            ChangeAnimationState("WALK");
+        if (!isShooting) {
+            if (isWalking && isGrounded) {
+                ChangeAnimationState("WALK");
+            }
+            if (!isWalking && isGrounded) {
+                ChangeAnimationState("IDLE");
+            }
         }
-        if (!isWalking) {
-            ChangeAnimationState("IDLE");
+        if (isShooting) {
+            ChangeAnimationState("SHOOT");
+            isShooting = false;
         }
     }
 
@@ -65,6 +74,9 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         if (other.gameObject.CompareTag("Enemy")) {
             HP -= 1;
+            if (HP <= 0) {
+                Debug.Log("Dead");
+            }
         }
     }
 }
